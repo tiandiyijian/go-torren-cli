@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/tiandiyijian/go-torrent-cli/bencode"
 	"github.com/tiandiyijian/go-torrent-cli/torrentfile"
 	"log"
@@ -9,13 +8,16 @@ import (
 )
 
 func main() {
-
-	file, _ := os.Open("files/test.torrent")
+	file, _ := os.Open("files/debian.torrent")
 	var tf torrentfile.TorrentFile
 	err := bencode.Unmarshal(file, &tf)
 	if err != nil {
 		log.Fatalln("invalid torrent file")
 	}
-	fmt.Printf("%+v", tf)
 
+	t, err := tf.ToTorrent()
+	if err != nil {
+		log.Fatalln("torrentfile to torrent err")
+	}
+	t.GetPeers()
 }
