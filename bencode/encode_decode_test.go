@@ -20,6 +20,16 @@ func TestInt(t *testing.T) {
 	assert.Equal(bLen, 5)
 	assert.Equal(buf.String(), "i233e")
 
+	buf.Reset()
+	buf.WriteString("i-233e")
+	bObj, err = Decode(buf)
+	assert.Equal(bObj.type_, BINT)
+	assert.Equal(bObj.val_, -233)
+
+	bLen, err = bObj.Encode(buf)
+	assert.Nil(err)
+	assert.Equal(bLen, 6)
+	assert.Equal(buf.String(), "i-233e")
 }
 
 func TestStr(t *testing.T) {

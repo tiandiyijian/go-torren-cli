@@ -40,7 +40,7 @@ func Decode(r io.Reader) (*BObj, error) {
 				return nil, err
 			}
 
-			if b[0] == 'e' {
+			if b[0] == 'e' { // end e
 				br.ReadByte()
 				return NewBObj(BLIST, list), nil
 			}
@@ -60,7 +60,7 @@ func Decode(r io.Reader) (*BObj, error) {
 				return nil, err
 			}
 
-			if b[0] == 'e' {
+			if b[0] == 'e' { // end e
 				br.ReadByte()
 				return NewBObj(BDICT, dict), nil
 			}
@@ -111,6 +111,16 @@ func DecodeString(br *bufio.Reader) (string, error) {
 func DecodeInt(br *bufio.Reader) (int, error) {
 	br.ReadByte() // start i
 
+	sign := 1
+	b, err := br.Peek(1)
+	if err != nil {
+		return 0, err
+	}
+	if b[0] == '-' {
+		sign = -1
+		br.ReadByte()
+	}
+
 	var num int
 	for b, _ := br.Peek(1); b[0] >= '0' && b[0] <= '9'; b, _ = br.Peek(1) {
 		c, err := br.ReadByte()
@@ -128,5 +138,5 @@ func DecodeInt(br *bufio.Reader) (int, error) {
 		return 0, ErrEpE
 	}
 
-	return num, nil
+	return sign * num, nil
 }
