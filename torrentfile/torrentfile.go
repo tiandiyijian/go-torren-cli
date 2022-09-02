@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"fmt"
+
 	"github.com/tiandiyijian/go-torrent-cli/bencode"
 	"github.com/tiandiyijian/go-torrent-cli/torrent"
 )
@@ -53,7 +54,7 @@ func (tf *TorrentFile) ToTorrent() (torrent.Torrent, error) {
 		return torrent.Torrent{}, err
 	}
 
-	piecesHash, err := tf.Info.splitPieceHashes()
+	pieceHashes, err := tf.Info.splitPieceHashes()
 	if err != nil {
 		return torrent.Torrent{}, err
 	}
@@ -64,6 +65,6 @@ func (tf *TorrentFile) ToTorrent() (torrent.Torrent, error) {
 		Length:      tf.Info.Length,
 		InfoHash:    infoHash,
 		PieceLength: tf.Info.PieceLength,
-		PieceHashes: piecesHash,
+		PieceHashes: pieceHashes,
 	}, nil
 }
